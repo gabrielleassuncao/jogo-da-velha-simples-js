@@ -1,0 +1,144 @@
+<html>
+
+    <head>
+        <style>
+            body {
+                display: flex; 
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                background-color: #d9e7f4;
+                background-image: url('background.jpg');
+                background-size: cover;
+            }
+            #game{
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                background-color: #a6b6df;
+                border-radius: 5px;
+                margin-top: 60px;
+            }
+            .buttonGame{
+                background-color: #c0cfea;
+                margin: 15px;
+                border: 0px;
+                height: 100px;
+                width: 100px;
+                border-radius: 10px;
+                font-size: 23px;
+                font-family: Georgia, 'Times New Roman', Times, serif;
+            }
+            
+            h1{
+                margin-top: 60px;
+                margin-bottom: 8.5px;
+                font-family: Georgia, 'Times New Roman', Times, serif;
+                font-size: 40px;
+            }
+
+            #status{
+                font-size: 30px;
+                margin-top: 35px;
+            }
+            
+        </style>
+    </head>
+
+    <body>
+        <h1>Jogo da Velha</h1>
+
+        <div id="game"></div>
+        <label id="status"></label>
+
+        <script>
+            let jogadas = [
+                '','','',
+                '','','',
+                '','',''
+            ];
+
+            let jogadorDaVez = 'X';
+            let gameover = false;
+    
+
+            const game = document.querySelector('#game');
+            const status = document.querySelector('#status');
+            function clickdoJogador(index){
+
+                if(jogadas[index] == '' && gameover == false){
+                jogadas[index]= jogadorDaVez;
+            
+                if(jogadorDaVez == 'X')
+                    jogadorDaVez = 'O'
+                else
+                    jogadorDaVez = 'X'
+                    status.innerHTML = `Vez do jogador ${jogadorDaVez}`;
+
+                desenhaBotoes();
+                verificaGanhador();
+        }
+    }
+
+    function verificaCelulas(c1, c2, c3){
+                let ganhou = (
+                jogadas[c1] != '' &&
+                jogadas[c2] != '' &&
+                jogadas[c3] != '' &&
+                jogadas[c1] == jogadas[c2] &&
+                jogadas[c2] == jogadas[c3]
+                );
+                if(ganhou){
+                status.innerHTML = `Jogador ${jogadas[c1]} Ganhou!`
+                game.children[c1].style= "background-color: #7393B3"
+                game.children[c2].style= "background-color: #7393B3"
+                game.children[c3].style= "background-color: #7393B3"
+            }
+
+
+                return ganhou;
+            }
+
+            function verificaGanhador(){
+               if( 
+                verificaCelulas(0,1,2) ||//linhas
+                verificaCelulas(3,4,5)||
+                verificaCelulas(6,7,8)||
+
+                verificaCelulas(0,3,6) ||//colunas
+                verificaCelulas(1,4,7)||
+                verificaCelulas(2,5,8)||
+
+                verificaCelulas(0,4,8) ||//diagonal
+                verificaCelulas(2,4,6)
+               )
+            
+
+            {
+                gameover= true;
+            }
+
+            let jogadasPreenchidas = jogadas.filter((item)=>{
+                return item != '';
+            })
+            if (jogadasPreenchidas.length ==9 && !gameover){
+                status.innerHTML = 'Deu Velha!'
+                gameover = true;
+            }
+        }
+            function desenhaBotoes(){
+
+            game.innerHTML = '';
+            for(let i = 0; i < 9; i ++){
+                game.innerHTML += `<button class = "buttonGame" 
+                onclick= "clickdoJogador(${i})"> 
+                ${jogadas[i]} </button>`;
+            }
+        }
+            desenhaBotoes();
+
+
+        </script>
+        
+        
+    </body>
+</html>
